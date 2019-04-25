@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Route, Switch, withRouter} from 'react-router-dom';
 import './App.css';
 import Dashboard from './Pages/Dashboard';
-import Home from './Pages/Home';
+import Splash from './Pages/Splash';
 import Connect from './Pages/Connect';
 import Authenticating from './Pages/Authenticating';
 import TwitterConfiguration from './Pages/TwitterConfiguration';
@@ -48,7 +48,7 @@ class App extends Component {
         <div className="App-content">
           <Switch>
             <Route exact path='/' component={Dashboard}/>
-            <Route exact path='/home' component={Home}/>
+            <Route exact path='/splash' component={Splash}/>
             <Route exact path='/connect' component={Connect}/>
             <Route exact path="/callback" component={Authenticating}/>
             <Route path="/twitter/:account" component={TwitterConfig}/>

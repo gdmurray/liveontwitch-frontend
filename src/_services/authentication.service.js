@@ -13,13 +13,12 @@ function setToken(token){
 }
 
 function prepareAuth(){
-    console.log("Getting Access Token");
     var token = sessionStorage.getItem('access_token');
     if (token) {
         axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
     } else {
-        console.log("no access token");
         axios.defaults.headers.common['Authorization'] = null;
+        window.location = "/splash";
         /*if setting null does not remove `Authorization` header then try     
             delete axios.defaults.headers.common['Authorization'];
         */
@@ -81,9 +80,14 @@ function connect(){
             window.location = response.data.auth_url;
         }
     }).catch((error) => {
-        if(error.response.data.message = "identifier has been used"){
-            localStorage.removeItem("identifier");
-            connect();
+        if(error.response){
+            if(error.response.data.message = "identifier has been used"){
+                localStorage.removeItem("identifier");
+                connect();
+            }
+        }else{
+            // TODO: Have an appropriate Error page
+            alert("There is an issue with the backend server");
         }
     })
     

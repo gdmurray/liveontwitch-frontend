@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faTwitter, faGithubAlt, faTwitch} from '@fortawesome/free-brands-svg-icons';
+import {authenticationService} from "../../_services/authentication.service";
 import {} from '@fortawesome/free-regular-svg-icons';
 import {faCog} from '@fortawesome/free-solid-svg-icons';
 import './splash.css';
@@ -14,7 +15,7 @@ import {
     Grid
 
 } from 'semantic-ui-react';
-export default class Home extends Component{
+export default class Splash extends Component{
     constructor(props){
         super(props);
 
@@ -22,6 +23,10 @@ export default class Home extends Component{
 
     connect = () => {
         this.props.history.push("/connect");
+    }
+
+    login = () => {
+        authenticationService.connect()
     }
     render(){
         var mobile = false;
@@ -33,7 +38,7 @@ export default class Home extends Component{
                                 liveontwitch
                             </Menu.Header>
                             <Menu.Item position="right">
-                                <Button inverted size="small" className="login-button">
+                                <Button inverted size="small" className="login-button" onClick={this.login}>
                                     Login
                                 </Button>
                             </Menu.Item>
