@@ -1,0 +1,137 @@
+.app-sidebar{
+    background: var(--theme-primary-color) !important; 
+    display: unset !important;
+    display: relative !important;
+    width: 200px !important;
+    overflow-y: hidden;
+  }
+  
+  .app-sidebar.menu .item,
+  .app-sidebar .menu .item{
+    color:white;
+  }
+  
+  .app-sidebar .top .item{
+    color: var(--theme-secondary-color) !important;
+  }
+  
+  .app-sidebar .content{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  .app-sidebar .app-header{
+    color: white;
+    font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  
+  .app-sidebar .top{
+    transition: all .3s ease-in-out;
+    flex: 1 !important;
+    color: white !important;
+  }
+  
+  .app-sidebar .side-element{
+    padding: 20px 0px 20px 0px !important;
+    border-radius: unset !important;
+    border-radius: 0px !important;
+    font-family: var(--theme-font) !important;
+    color: var(--theme-secondary-color);
+    font-size: 1rem !important;
+    cursor: pointer;
+  }
+  
+  .side-element.active{
+    background: var(--theme-primary-color) !important;
+    padding-bottom: 0px !important;
+  }
+  .side-element:hover{
+  
+  }
+  
+  .sidebar-accounts-list{
+    list-style: none;
+    padding-left: 0px;
+    font-size: 1rem;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .sidebar-accounts-list li{
+    padding: 10px 10px 10px 30px;
+  }
+  
+  .add-account{
+    color: var(--theme-green);
+  }
+  .add-account i{
+    font-size: 12px !important;
+  }
+  .sidebar-accounts-list li:hover{
+    background: var(--theme-primary-dark-color);
+    cursor: pointer;
+  }
+  
+  .side-element span{
+    padding-left: 20px;
+  }
+  
+  .side-element span i{
+    font-size: 14px;
+  }
+  .side-element>.title>.dropdown.icon{
+    margin-top: 0px !important;
+  }
+  .ui.secondary.vertical.menu>.item.side-element{
+    border-radius: 0px !important;
+    margin-bottom: 0px !important;
+  }
+  
+  .side-element:not(:last-child){
+    border-bottom: 1px solid var(--theme-body-color) !important;
+  }
+  
+  .sidebar-accordion{
+    margin-left: 0px !important;
+  }
+  .app-sidebar .side-element .title{
+    font-size: 1rem !important;
+    font-family: var(--theme-font) !important;
+    color: var(--theme-secondary-color) !important;
+  }
+  
+  .app-sidebar .bottom{
+    flex: 1 !important;
+    max-height: 106px !important;
+  }
+  
+  .app-sidebar .bottom .icon,
+  .app-sidebar .bottom .item,
+  .app-sidebar .bottom .content{
+    color: var(--theme-secondary-color) !important;
+    text-align: center;
+  }
+  
+  .app-sidebar .bottom .content{
+    width: 50%;
+  }
+  
+  .app-sidebar .content.active{
+    padding-top: 0px !important;
+  }
+  .app-sidebar .fine-print{
+    font-size: 0.25rem;
+    text-align: left !important;
+    display: flex !important;
+    justify-content: space-between;
+    margin-right: 35px;
+  }
+  
+  .app-sidebar .icon{
+    font-size: 0.75rem;
+  }
+
+  .sidebar-account-subitem a{
+    color: white !important;
+  }

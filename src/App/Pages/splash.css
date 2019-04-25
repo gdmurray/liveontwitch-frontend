@@ -1,0 +1,132 @@
+.splash-header{
+    height: 400px;
+    background-color: var(--theme-primary-color);
+  }
+  
+  .splash-navbar{
+    height: 100px;
+    background-color: var(--theme-primary-color);
+  }
+  
+  .splash-header .splash-slogan-main{
+    font-weight: 700;
+    text-align: center;
+    padding-right: 20%;
+    padding-left: 20%;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  
+  .splash-header .splash-slogan-secondary{
+    color: var(--theme-secondary-color);
+    font-weight: 400;
+    margin-top: 0px;
+    font-family: 'Source Sans Pro', sans-serif;
+    text-align: center;
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+  
+  .splash-header:after{
+    content: " ";
+    position: absolute;
+    top: 400px;
+    z-index: 0;
+    width: 0;
+    height: 0;
+    border-left: 100vw solid var(--theme-primary-color);
+    /* border-right: 105px solid #db2828; */
+    border-bottom: 150px solid transparent;
+  }
+  
+  .splash-header .slogan-get-started{
+    text-align: center;
+  }
+  
+  .slogan-get-started{
+    padding-top: 3rem;
+  }
+  .slogan-get-started .button{
+    border-radius: 40px;
+    height: 40px;
+  }
+  
+  .slogan-get-started .button{
+    background-color: white;
+    width: 10rem;
+    color: var(--theme-primary-color) !important;
+  }
+  
+  .slogan-get-started .button:active,
+  .slogan-get-started .button:focus,
+  .slogan-get-started .button:hover{
+    background-color: white;
+  }
+  
+  .circular-icon{
+    border-radius: 500em!important;
+    line-height: 1!important;
+    padding: .5em 0!important;
+    -webkit-box-shadow: 0 0 2px 2px rgba(0,0,0,.1);
+    box-shadow: 0 0 2px 2px rgba(0,0,0,.1);
+    width: 4em!important;
+    height: 4em!important;
+    color: white;
+    font-size: 1.5rem;
+    padding: 1.5rem !important;
+    margin-bottom: 1rem;
+  }
+  
+  .features-grid .content{
+    font-family: var(--theme-font);
+    font-weight: 600 !important;
+    font-size: 1.2rem;
+    line-height: 1rem;
+    white-space: nowrap;
+    letter-spacing: 0px;
+    color: var(--theme-body-color) !important;
+  }
+  
+  .features-grid .sub{
+    font-family: var(--theme-font);
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    line-height: 11px !important;
+    margin-top: 6px !important;
+    letter-spacing: 0px;
+    color: var(--theme-secondary-color) !important;
+  }
+  .circular-icon svg{
+    width: 1rem;
+  }
+  
+  .splash-menu{
+    padding-top: 2rem;
+    padding-bottom: 5rem;
+    line-height: 3rem;
+  }
+
+  .splash-diagram{
+    position: relative;
+    width: 80%;
+    z-index: 999;
+    left: 10%;
+    padding-bottom: 100px;
+  }
+  
+  .splash-lower-slogan-main{
+    color: var(--theme-primary-color) !important;
+    text-align: center;
+    font-weight: 700 !important;
+    margin-bottom: 0px !important;
+    font-family: 'Source Sans Pro', sans-serif !important;
+  }
+  
+  .splash-lower-slogan-secondary{
+    text-align: center;
+    color: var(--theme-secondary-color) !important;
+    font-weight: 400 !important;
+    margin-bottom: 4rem !important;
+    margin-top: 0px !important;
+    font-family: 'Source Sans Pro', sans-serif !important;
+  }

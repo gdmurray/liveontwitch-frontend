@@ -1,0 +1,43 @@
+.accounts-list{
+    margin-left: 5px;
+    padding-left: 0px;
+  }
+  .twitter-account{
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    height: 40px;
+    border: 1px solid var(--theme-secondary-color);
+    border-radius: 3px;
+    display: flex;
+    background: white;
+    margin-bottom: 5px;
+  }
+  
+  .twitter-account:hover{
+    box-shadow: 1px 2px 10px rgba(0,0,0,.1);
+    transition: all .3s ease-in-out;
+    cursor: pointer;
+  }
+  
+  .twitter-account .status{
+    font-size: 8px;
+    width: 30px;
+    text-align: center;
+    color: var(--theme-green);
+  }
+  
+  .twitter-account .username{
+    font-size: 0.9rem;
+    width: 80%;
+    font-weight: 600;
+    color: var(--theme-body-color);
+  }
+  
+  .twitter-account .configure{
+    font-size: 12px;
+    width: 30px;
+    text-align: center;
+    color: var(--theme-secondary-color);
+  }
+  
