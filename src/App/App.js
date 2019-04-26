@@ -7,6 +7,7 @@ import Connect from './Pages/Connect';
 import Authenticating from './Pages/Authenticating';
 import TwitterConfiguration from './Pages/TwitterConfiguration';
 import TwitterConfig from './Pages/TwitterConfig/TwitterConfig';
+import Error from './Pages/Error';
 const axios = require('axios');
 
 class App extends Component {
@@ -51,6 +52,7 @@ class App extends Component {
             <Route exact path='/splash' component={Splash}/>
             <Route exact path='/connect' component={Connect}/>
             <Route exact path="/callback" component={Authenticating}/>
+            <Route exact path="/error" component={Error}/>
             <Route path="/twitter/:account" component={TwitterConfig}/>
           </Switch>
         </div>

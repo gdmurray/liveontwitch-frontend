@@ -52,7 +52,7 @@ function generateIdentifier(){
     localStorage.setItem('identifier', JSON.stringify(data));
     return data;
 }
-function connect(){
+function connect(props=undefined){
     var exists = localStorage.getItem('identifier');
     if (exists == null){
         data = generateIdentifier();
@@ -87,7 +87,13 @@ function connect(){
             }
         }else{
             // TODO: Have an appropriate Error page
-            alert("There is an issue with the backend server");
+            if(props){
+                console.log("Go to error page");
+                props.history.push("/error", {"message": "Backend Server is not Responding"})
+            }else{
+                alert("Backend Server is Not Responding");
+            }
+            
         }
     })
     

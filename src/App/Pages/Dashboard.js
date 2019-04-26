@@ -33,10 +33,9 @@ export default class Dashboard extends Component{
             accounts: []
         }
     }
-    componentWillMount(){
-        authenticationService.prepareAuth();
-    }
+
     componentDidMount(){
+        authenticationService.prepareAuth();
         axios.get(TWITTER_ACCOUNTS_URL).then((response) => {
             this.setState({
                 accounts: response.data,
@@ -79,8 +78,10 @@ export default class Dashboard extends Component{
                 <div>
                     <Header as="h5">Accounts (1)</Header>
                     <ul className="accounts-list">
-                        {accounts.map(item => <li className="twitter-account" key={item.uid}>
-                            <div className="status">
+                        {accounts.map(item => 
+                        <li onClick={() => this.props.history.push(`/twitter/${item.username}`)}
+                        className="twitter-account" key={item.uid}>
+                            <div className={item.active ? "status active" : "status"}>
                                 <Icon name="circle"/>
                             </div>
                             <div className="username">

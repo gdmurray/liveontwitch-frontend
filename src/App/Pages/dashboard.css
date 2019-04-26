@@ -24,6 +24,10 @@
     font-size: 8px;
     width: 30px;
     text-align: center;
+    color: var(--theme-red);
+  }
+
+  .twitter-account .status.active{
     color: var(--theme-green);
   }
   

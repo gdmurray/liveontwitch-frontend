@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
+import {TWITTER_CONFIG_DETAIL} from "../../../constants";
 import {
     Button,
     Form,
@@ -18,8 +19,15 @@ class TwitterConfigSettings extends Component{
     open = () => this.setState({ confirmOpen: true })
     close = () => this.setState({ confirmOpen: false })
     handleDeleteAccount = () => {
-        console.log("Deleting Account")
         this.close();
+        axios({
+            method: "delete",
+            url: `${TWITTER_CONFIG_DETAIL}${this.props.account.uid}/`
+        }).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.log(error);
+        })
     }
 
     render(){

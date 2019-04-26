@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Container } from 'semantic-ui-react';
 import {} from "../../functions";
+import Navbar from "../components/Navbar";
 import {authenticationService} from "../../_services/authentication.service";
 import {
     Menu,
@@ -9,31 +10,19 @@ import {
     Header,
     Icon
 } from 'semantic-ui-react';
+import {withRouter} from 'react-router-dom';
 
-export default class Connect extends Component{
+class Connect extends Component{
     constructor(props){
         super(props);
     }
     connectTwitch = () => {
-        authenticationService.connect();
+        authenticationService.connect(this.props);
     }
     render(){
         return(
             <div>
-            <div className="splash-navbar">
-                <Container>
-                    <Menu secondary className="splash-menu">
-                        <Menu.Header className="site-logo">
-                            liveontwitch
-                        </Menu.Header>
-                        <Menu.Item position="right">
-                            <Button inverted size="small" className="login-button">
-                                Login
-                            </Button>
-                        </Menu.Item>
-                    </Menu>
-                </Container>
-            </div>
+            <Navbar/>
             <Container style={{padding: '1rem'}}>
                 <Segment placeholder>
                     <Header icon>
@@ -47,3 +36,5 @@ export default class Connect extends Component{
         )
     }
 }
+
+export default withRouter(Connect);

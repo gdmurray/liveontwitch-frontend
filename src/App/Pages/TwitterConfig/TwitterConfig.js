@@ -54,6 +54,9 @@ class TwitterConfig extends Component{
             }).catch((error) => {
                 if(error.response.status == 401){
                     authenticationService.connect();
+                }else if(error.response.status == 404){
+                    console.log("Account Doesnt Exist, Push Update to frontend");
+                    this.props.history.push("/");
                 }
             });
     }
