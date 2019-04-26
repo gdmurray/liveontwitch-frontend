@@ -36,10 +36,12 @@ function callback(execFunc){
     }).then((response) => {
         localStorage.removeItem('identifier');
         setToken(response.data.token);
-
+        console.log("Setting Token...")
+        setTimeout(function(){
+            execFunc();
+        }, 250)
     })
 
-    execFunc();
 
 }
 function generateIdentifier(){

@@ -35,7 +35,14 @@ export default class Dashboard extends Component{
     }
 
     componentDidMount(){
-        authenticationService.prepareAuth();
+        if(this.props.location.state.source){
+            if(this.props.location.state.source != "authentication"){
+                authenticationService.prepareAuth();
+            }
+        }else{
+            authenticationService.prepareAuth();
+        }
+        
         axios.get(TWITTER_ACCOUNTS_URL).then((response) => {
             this.setState({
                 accounts: response.data,

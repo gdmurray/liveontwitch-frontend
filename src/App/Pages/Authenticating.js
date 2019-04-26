@@ -7,7 +7,7 @@ export default class Authenticating extends Component{
     }
 
     goToHome = ( ) => {
-        this.props.history.push("/");
+        this.props.history.push("/", {"source": "authentication"});
     }
     componentDidMount(){
         authenticationService.callback(this.goToHome);
