@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
-import {TWITTER_CONFIG_DETAIL} from "../../../constants";
+import {TWITTER_CONFIG_DETAIL, TWITTER_TOGGLE_CONFIG} from "../../../constants";
 import {
     Button,
     Form,
@@ -30,6 +30,15 @@ class TwitterConfigSettings extends Component{
         })
     }
 
+    handleToggleRuleSet = () => {
+        axios.post(`${TWITTER_TOGGLE_CONFIG}${this.props.account.uid}`).then((response) => {
+            this.props.accountDataCallback(response.data);
+            this.setState({
+                accountData: response.data
+            });
+        })
+    }
+
     render(){
         const{accountData} = this.state;
         return (
@@ -39,7 +48,10 @@ class TwitterConfigSettings extends Component{
                 <Form>
                     <Form.Field inline>
                         <label>Configuration Status</label>
-                        <Button color={accountData.config.active ? 'yellow' : 'green'}>{accountData.config.active ? 'Deactivate' : 'Activate'}</Button>
+                        <Button onClick={this.handleToggleRuleSet}
+                            color={accountData.config.active ? 'yellow' : 'green'}>
+                            {accountData.config.active ? 'Deactivate' : 'Activate'}
+                        </Button>
                     </Form.Field>
                     <Form.Field inline>
                         <label>Re-Authorize Account</label>

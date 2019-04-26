@@ -10,8 +10,7 @@ import {
     Sidebar, 
     Container, 
     Menu, 
-    Comment, 
-    Segment, 
+    Image, 
     Dropdown, 
     Icon, 
     Input, 
@@ -81,12 +80,26 @@ class AppSidebar extends Component{
     goToHome = ( ) => {
         this.props.history.push('/');
     }
+
+    getTwitchInfo = () => {
+        var content = localStorage.getItem("userInfo");
+        if(content){
+            var data = JSON.parse(content);
+            return (
+                <Header as='h5'>
+                    <Image circular src={data.logo} /> 
+                        {data.username}
+                </Header>
+            )
+        }else{
+            return '';
+        }
+    }
     //this.setState({ activeItem: name })
     render(){
         const {activeTabs, accounts} = this.state;
         return(
             <Sidebar as={Menu} visible={true} className='app-sidebar' vertical>
-                <div className="content">
                     <div className="top">
                         <Menu.Item>
                             <Header as='h1' className='app-header'>liveontwitch</Header>
@@ -138,7 +151,9 @@ class AppSidebar extends Component{
                             </Menu.Item>
                         </Accordion>
                     </div>
-                </div>
+                    <div className="bottom">
+                        {this.getTwitchInfo()}
+                    </div>
             </Sidebar>
         )
     }

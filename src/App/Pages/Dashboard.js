@@ -34,15 +34,11 @@ export default class Dashboard extends Component{
         }
     }
 
+    componentWillMount(){
+        authenticationService.prepareAuth(this.props);
+    }
+
     componentDidMount(){
-        if(this.props.location.state){
-            if(this.props.location.state.source != "authentication"){
-                authenticationService.prepareAuth();
-            }
-        }else{
-            authenticationService.prepareAuth();
-        }
-        
         axios.get(TWITTER_ACCOUNTS_URL).then((response) => {
             this.setState({
                 accounts: response.data,
@@ -54,7 +50,13 @@ export default class Dashboard extends Component{
             });
             if(error.response){
                 if(error.response.status === 401){
-                    authenticationService.connect();
+                    var access_token = sessionStorage.getItem('access_token');
+                    if(access_token){
+                        authenticationService.connect();
+                    }else{
+                        authenticationService.prepareAuth(this.props);
+                    }
+                    
                 }
             }
         });

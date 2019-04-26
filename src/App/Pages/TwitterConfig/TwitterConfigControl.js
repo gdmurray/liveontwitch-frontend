@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {TWITTER_CONFIG_DETAIL,POSITIONING} from "../../../constants";
+import {formatSince} from "../../../functions";
 
 import {
     Container,
@@ -23,6 +24,7 @@ const moment = require('moment');
 
 const USERNAME_CONFIG = "username_config";
 const BIO_CONFIG = "bio_config";
+
 const config_change_map = {
     [USERNAME_CONFIG]: "usernameChangesMade",
     [BIO_CONFIG]: "bioChangesMade"
@@ -33,6 +35,7 @@ class TwitterConfigControl extends Component{
         super(props);
         this.state = {
             accountData: props.accountData,
+            
             username_config: {
                 active: null
             },
@@ -41,32 +44,35 @@ class TwitterConfigControl extends Component{
             },
             usernameChangesMade: false,
             bioChangesMade: false,
+
             username_config_updated: null,
             bio_config_updated: null,
         }
 
     }
 
-    formatSince(date){
-        return moment(date).format("MMM Do H:mm a");
+    formatValue(data){
+        if(data == null || data == undefined){
+            return ''
+        }else{
+            return data;
+        }
     }
     setConfigs = (accountData) => {
         this.setState({
             accountData: accountData,
+            
             username_config: accountData.config.username_config,
-            bio_config: accountData.config.username_config,
-            username_config_updated: this.formatSince(accountData.config.username_config.updated),
-            bio_config_updated: this.formatSince(accountData.config.bio_config.updated),
-            usernameChangesMade: false,
+            username_config_updated: formatSince(accountData.config.username_config.updated),
+            usernameChangesMade: false,            
+            
+            bio_config: accountData.config.bio_config,
+            bio_config_updated: formatSince(accountData.config.bio_config.updated),
             bioChangesMade: false
         })
     }
     componentDidMount(){
         this.setConfigs(this.props.accountData);
-    }
-    componentWillReceiveProps(newProps){
-        console.log("Receiving Props");
-        console.log(newProps);
     }
 
     handleLiveTextChange = (e, { value }, conf) => {
@@ -80,7 +86,8 @@ class TwitterConfigControl extends Component{
         this.setState({[conf]: config, [config_change_map[conf]]: true});
     }
 
-    handleActiveChange = (conf) => {const config = this.state[conf];
+    handleActiveChange = (conf) => {
+        const config = this.state[conf];
         config.active = !config.active;
         this.setState({[conf]: config, [config_change_map[conf]]: true});
     }
@@ -93,18 +100,16 @@ class TwitterConfigControl extends Component{
     }
 
     handleSubmitChanges = (conf) => {
-        const {account } = this.state;
         axios({
-            url: `${TWITTER_CONFIG_DETAIL}${account.uid}/?config=${conf}`,
+            url: `${TWITTER_CONFIG_DETAIL}${this.props.account.uid}/?config=${conf}`,
             method: 'put',
             data: this.state[conf]}
             ).then((response) => {
                 var {accountData} = this.state;
                 accountData[conf] = response.data;
-                console.log(response.data);
                 this.setState({
                     accountData: accountData,
-                    [`${conf}_updated`]: this.formatSince(response.data.updated),
+                    [`${conf}_updated`]: formatSince(response.data.updated),
                     [conf]: response.data,
                     [config_change_map[conf]]: false,
                 });
@@ -177,7 +182,7 @@ class TwitterConfigControl extends Component{
                                 <Form>
                                     <Form.Input onChange={(e, {value}) => this.handleLiveTextChange(e, {value}, USERNAME_CONFIG)}
                                         label='Live Text' placeholder='Text When Live' 
-                                        defaultValue={username_config.live_text}/>
+                                        defaultValue={this.formatValue(username_config.live_text)}/>
                                     <Form.Field onChange={(e, {value}) => this.handlePositioningChange(e,{value}, USERNAME_CONFIG )}
                                         control={Select} label='Positioning' options={POSITIONING}
                                         defaultValue={username_config.positioning}/>
@@ -251,7 +256,7 @@ class TwitterConfigControl extends Component{
                                 <Form>
                                     <Form.Input onChange={(e, {value}) => this.handleLiveTextChange(e, {value}, BIO_CONFIG)}
                                      label='Live Text' placeholder='Text When Live'
-                                     value={bio_config.live_text} />
+                                     value={this.formatValue(bio_config.live_text)} />
                                     <Form.Field onChange={(e, {value}) => this.handlePositioningChange(e,{value}, BIO_CONFIG )}
                                     value={bio_config.positioning} control={Select} label='Positioning' options={POSITIONING}  />
                                 </Form>

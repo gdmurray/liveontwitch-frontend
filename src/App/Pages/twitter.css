@@ -6,7 +6,7 @@
     border-bottom: 1px solid var(--theme-secondary-color);
 }
 .twitter-navbar{
-    height: 100px;
+    height: 115px;
     display: flex;
     align-items: flex-start;
     flex-direction: column;
@@ -19,6 +19,23 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+
+.navbar-content .refreshed{
+    font-size: 0.75rem;
+    color: var(--theme-secondary-color);
+}
+
+.twitter-navbar .navbar-content .navbar-controls{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.twitter-navbar .navbar-content .navbar-controls button{
+    height: 25px;
+    padding: 0.25rem;
+    margin-top: 2px;
 }
 .twitter-navbar .twitter-tabs{
     margin-top: 6px;
@@ -78,8 +95,19 @@
     margin-right: 0px !important;
     margin-left: 0px !important;
     padding: 1rem;
+    opacity: 1.0;
+    transition: height 250ms 250ms, opacity 250ms 250ms;
+
 }
 
+/*
+.control-content:not(.active){
+    transition: height 250ms 250ms, opacity 250ms 0ms;
+    opacity: 0.0;
+    padding: 0px !important;
+    margin: 7px !important;
+    height: 1px;
+}*/
 .ui.container.control-content{
     margin-right: 0px !important;
     margin-left: 0px !important;

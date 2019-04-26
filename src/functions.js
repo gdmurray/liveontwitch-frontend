@@ -1,5 +1,6 @@
 import {CONNECT_TWITCH_URL, TWITTER_AUTH_URL} from './constants';
 const axios = require('axios');
+const moment = require('moment');
 
 export const ConnectTwitch = () => {
     window.location = CONNECT_TWITCH_URL;
@@ -10,4 +11,8 @@ export const connectTwitter = () => {
             window.location = response.data.auth_url;
         }
     })
+}
+
+export const formatSince = (date) => {
+    return moment(date).format("MMM Do h:mm a");
 }

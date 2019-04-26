@@ -1,4 +1,4 @@
-import {CONNECT_TWITCH_URL, COMPLETE_TWITCH_AUTH} from "../constants";
+import {CONNECT_TWITCH_URL, COMPLETE_TWITCH_AUTH, TWITCH_ACCOUNT_INFO} from "../constants";
 var axios = require('axios');
 var crypto = require('crypto');
 export const authenticationService = {
@@ -12,16 +12,37 @@ function setToken(token){
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 }
 
-function prepareAuth(){
-    var token = sessionStorage.getItem('access_token');
-    if (token) {
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
-    } else {
-        axios.defaults.headers.common['Authorization'] = null;
-        window.location = "/splash";
-        /*if setting null does not remove `Authorization` header then try     
-            delete axios.defaults.headers.common['Authorization'];
-        */
+function prepareAuth(props){
+    //console.log(props.location.state);
+    if(props.location.state !== null && props.location.state !== undefined){
+        //console.log("Sent With State");
+        if(props.location.state.token !== undefined){
+            //console.log("just authed...");
+            token = props.location.state.token;
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+            axios.get(TWITCH_ACCOUNT_INFO).then((response) => {
+                localStorage.setItem("userInfo", JSON.stringify(response.data));
+            })
+        }else{
+            var token = sessionStorage.getItem('access_token');
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+        }
+    }else{
+        //console.log("Default Refresh Behaviour");
+        token = sessionStorage.getItem('access_token');
+        if(token){
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+        }else{
+            var userInfo = localStorage.getItem("userInfo");
+            //console.log(userInfo);
+            if(userInfo !== null){
+                //console.log("Navigate to /login");
+                window.location = "/login"
+            }else{
+                //console.log("Navigate to Splash");
+                window.location = "/splash";
+            }
+        }
     }
 }
 
@@ -36,9 +57,8 @@ function callback(execFunc){
     }).then((response) => {
         localStorage.removeItem('identifier');
         setToken(response.data.token);
-        console.log("Setting Token...")
         setTimeout(function(){
-            execFunc();
+            execFunc(response.data.token);
         }, 250)
     })
 

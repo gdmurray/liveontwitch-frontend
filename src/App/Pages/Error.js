@@ -6,7 +6,6 @@ import {
     Header,
     Button,
     Icon,
-
 } from 'semantic-ui-react';
 import {withRouter} from 'react-router-dom';
 

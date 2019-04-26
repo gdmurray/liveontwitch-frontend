@@ -8,6 +8,7 @@ import Authenticating from './Pages/Authenticating';
 import TwitterConfiguration from './Pages/TwitterConfiguration';
 import TwitterConfig from './Pages/TwitterConfig/TwitterConfig';
 import Error from './Pages/Error';
+import Login from './Pages/Login';
 const axios = require('axios');
 
 class App extends Component {
@@ -53,6 +54,7 @@ class App extends Component {
             <Route exact path='/connect' component={Connect}/>
             <Route exact path="/callback" component={Authenticating}/>
             <Route exact path="/error" component={Error}/>
+            <Route exact path="/login" component={Login}/>
             <Route path="/twitter/:account" component={TwitterConfig}/>
           </Switch>
         </div>
