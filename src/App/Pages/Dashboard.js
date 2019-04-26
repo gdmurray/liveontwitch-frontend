@@ -35,7 +35,7 @@ export default class Dashboard extends Component{
     }
 
     componentDidMount(){
-        if(this.props.location.state.source){
+        if(this.props.location.state){
             if(this.props.location.state.source != "authentication"){
                 authenticationService.prepareAuth();
             }
