@@ -1,0 +1,10 @@
+.login-segment{
+    min-width: 330px;
+}
+
+.login-form-div{
+    max-width: 500;
+    min-width: 300;
+    width: '100%';
+    display: 'inline-block'
+}

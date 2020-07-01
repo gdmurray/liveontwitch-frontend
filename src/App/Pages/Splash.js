@@ -15,6 +15,97 @@ import {
     Grid
 
 } from 'semantic-ui-react';
+import { bindActionCreators } from 'redux';
+import { push } from 'connected-react-router';
+import { connect } from 'react-redux';
+
+const splash = props => (
+    <div className="splash-header">
+        <Container>
+            <Menu secondary className="splash-menu">
+                <Menu.Header className="site-logo">
+                    liveontwitch
+                </Menu.Header>
+                <Menu.Item position="right">
+                    <Button inverted size="small" className="login-button" onClick={() => props.login()}>
+                        Login
+                    </Button>
+                </Menu.Item>
+            </Menu>
+            <Container text>
+                <Header as='h1' content='Attract More Viewers to Your Stream With Ease'
+                className="splash-slogan-main"/>
+                <Header
+                as='h3'
+                className="splash-slogan-secondary"
+                content='Integrate your Twitch and Twitter accounts to effortlessly inform followers and leads that you’re live. Increase engagement and responsiveness to going live on stream. '
+                />
+                <div className="slogan-get-started">
+                    <Button animated onClick={() => props.getStarted()}>
+                        <Button.Content visible>Get Started</Button.Content>
+                        <Button.Content hidden>
+                            <Icon name='arrow right' />
+                        </Button.Content>
+                    </Button>
+                </div>
+                <img className="splash-diagram" src={process.env.PUBLIC_URL + '/img/diagram.png'}></img>
+            </Container>
+        </Container>
+        <Container className='splash-bottom' text>
+            <Header as='h2' content='Is your Twitter influence reaching prospective Twitch viewers?'
+                className="splash-lower-slogan-main"/>
+            <Header as='h4' content='Bring in more viewers by providing visual queues of being live'
+            className="splash-lower-slogan-secondary"/>
+
+            <Grid columns='2' stackable className="features-grid">    
+                <Grid.Row textAlign="center">
+                    <Grid.Column textAlign="center">
+                        <Header as='h2' icon textAlign='center'>
+                            <FontAwesomeIcon icon={faTwitter} className="circular-icon" style={{backgroundColor: 'var(--theme-twitter-primary)'}}/>
+                            <Header.Content>Twitter Responsiveness</Header.Content>
+                            <Header.Subheader>Configure how your Twitter account displays your activity on Twitch.</Header.Subheader>
+                        </Header>
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Header as='h2' icon textAlign='center'>
+                            <FontAwesomeIcon icon={faCog} className="circular-icon" style={{backgroundColor: 'var(--theme-green)'}}/>
+                            <Header.Content>Easy Configuration</Header.Content>
+                            <Header.Subheader>No effort configuration to update your username or status that you’re live.</Header.Subheader>
+                        </Header>
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Header as='h2' icon textAlign='center'>
+                            <FontAwesomeIcon icon={faGithubAlt} className="circular-icon" style={{backgroundColor: 'var(--theme-orange)'}}/>
+                            <Header.Content>Transparent Systems</Header.Content>
+                            <Header.Subheader>This application is open source, to give you assurance that your accounts are doing what we promised.</Header.Subheader>
+                        </Header>
+                    </Grid.Column>
+                    <Grid.Column>
+                        <Header as='h2' icon textAlign='center'>
+                            <FontAwesomeIcon icon={faTwitch} className="circular-icon" style={{backgroundColor: 'var(--theme-twitch-primary)'}}/>
+                            <Header.Content>Simple Integration</Header.Content>
+                            <Header.Subheader>No need to log in with email or password, simply use your Twitch account to prove you are who you say you are.</Header.Subheader>
+                        </Header>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
+        </Container>
+    </div>
+)
+
+const mapDispatchToProps = (dispatch, props) => bindActionCreators(
+    {
+        getStarted: () => push('/connect'),
+        login: () => authenticationService.connect(props)
+    },
+    dispatch
+)
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(splash);
+/*
 export default class Splash extends Component{
     constructor(props){
         super(props);
@@ -28,80 +119,4 @@ export default class Splash extends Component{
     login = () => {
         authenticationService.connect()
     }
-    render(){
-        var mobile = false;
-        return(
-                <div className="splash-header">
-                    <Container>
-                        <Menu secondary className="splash-menu">
-                            <Menu.Header className="site-logo">
-                                liveontwitch
-                            </Menu.Header>
-                            <Menu.Item position="right">
-                                <Button inverted size="small" className="login-button" onClick={this.login}>
-                                    Login
-                                </Button>
-                            </Menu.Item>
-                        </Menu>
-                        <Container text>
-                            <Header as='h1' content='Attract More Viewers to Your Stream With Ease'
-                            className="splash-slogan-main"/>
-                            <Header
-                            as='h3'
-                            className="splash-slogan-secondary"
-                            content='Integrate your Twitch and Twitter accounts to effortlessly inform followers and leads that you’re live. Increase engagement and responsiveness to going live on stream. '
-                            />
-                            <div className="slogan-get-started">
-                                <Button animated onClick={() => this.connect()}>
-                                    <Button.Content visible>Get Started</Button.Content>
-                                    <Button.Content hidden>
-                                        <Icon name='arrow right' />
-                                    </Button.Content>
-                                </Button>
-                            </div>
-                            <img className="splash-diagram" src={process.env.PUBLIC_URL + '/img/diagram.png'}></img>
-                        </Container>
-                    </Container>
-                    <Container className='splash-bottom' text>
-                        <Header as='h2' content='Is your Twitter influence reaching prospective Twitch viewers?'
-                            className="splash-lower-slogan-main"/>
-                        <Header as='h4' content='Bring in more viewers by providing visual queues of being live'
-                        className="splash-lower-slogan-secondary"/>
-
-                        <Grid columns='equal' stackable className="features-grid">    
-                            <Grid.Row textAlign="center">
-                                <Grid.Column textAlign="center">
-                                    <Header as='h2' icon textAlign='center'>
-                                        <FontAwesomeIcon icon={faTwitter} className="circular-icon" style={{backgroundColor: 'var(--theme-twitter-primary)'}}/>
-                                        <Header.Content>Twitter Responsiveness</Header.Content>
-                                        <Header.Subheader>Configure how your Twitter account displays your activity on Twitch.</Header.Subheader>
-                                    </Header>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Header as='h2' icon textAlign='center'>
-                                        <FontAwesomeIcon icon={faCog} className="circular-icon" style={{backgroundColor: 'var(--theme-green)'}}/>
-                                        <Header.Content>Easy Configuration</Header.Content>
-                                        <Header.Subheader>No effort configuration to update your username or status that you’re live.</Header.Subheader>
-                                    </Header>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Header as='h2' icon textAlign='center'>
-                                        <FontAwesomeIcon icon={faGithubAlt} className="circular-icon" style={{backgroundColor: 'var(--theme-orange)'}}/>
-                                        <Header.Content>Transparent Systems</Header.Content>
-                                        <Header.Subheader>This application is open source, to give you assurance that your accounts are doing what we promised.</Header.Subheader>
-                                    </Header>
-                                </Grid.Column>
-                                <Grid.Column>
-                                    <Header as='h2' icon textAlign='center'>
-                                        <FontAwesomeIcon icon={faTwitch} className="circular-icon" style={{backgroundColor: 'var(--theme-twitch-primary)'}}/>
-                                        <Header.Content>Simple Integration</Header.Content>
-                                        <Header.Subheader>No need to log in with email or password, simply use your Twitch account to prove you are who you say you are.</Header.Subheader>
-                                    </Header>
-                                </Grid.Column>
-                            </Grid.Row>
-                        </Grid>
-                    </Container>
-                </div>
-        )
-    }
-}
+    */

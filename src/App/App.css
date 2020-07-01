@@ -107,3 +107,12 @@
 .connect-twitter{
   background-color: var(--theme-twitter-primary);
 }
+
+.get-started-container{
+  display: flex
+}
+
+.get-started-container > div {
+  flex: 1;
+  text-align: center;
+}

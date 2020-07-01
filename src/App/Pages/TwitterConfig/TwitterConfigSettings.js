@@ -6,41 +6,33 @@ import {
     Form,
     Confirm,
 } from 'semantic-ui-react';
+import {connect} from "react-redux";
+import { isReady, isEmpty } from './TwitterConfigControl';
+import { toggleConfig } from '../../../actions/configActions';
 
 const axios = require('axios');
+
 class TwitterConfigSettings extends Component{
     constructor(props){
         super(props);
         this.state = {
-            accountData: props.accountData,
             confirmOpen: false,
         }
     }
     open = () => this.setState({ confirmOpen: true })
     close = () => this.setState({ confirmOpen: false })
+    
     handleDeleteAccount = () => {
         this.close();
-        axios({
-            method: "delete",
-            url: `${TWITTER_CONFIG_DETAIL}${this.props.account.uid}/`
-        }).then((response) => {
-            console.log(response);
-        }).catch((error) => {
-            console.log(error);
-        })
     }
 
     handleToggleRuleSet = () => {
-        axios.post(`${TWITTER_TOGGLE_CONFIG}${this.props.account.uid}`).then((response) => {
-            this.props.accountDataCallback(response.data);
-            this.setState({
-                accountData: response.data
-            });
-        })
+        this.props.dispatch(toggleConfig(this.props.account.uid));
     }
 
     render(){
-        const{accountData} = this.state;
+        //console.log(this.props.configActive);
+        //if(!isEmpty(this.props.isActive)){
         return (
             <div className="twitter-settings">
                 <Confirm header={"Are You Sure?"} content={"Once you delete a Twitter account you lose all configuration settings and need to re-authorize."}
@@ -49,8 +41,8 @@ class TwitterConfigSettings extends Component{
                     <Form.Field inline>
                         <label>Configuration Status</label>
                         <Button onClick={this.handleToggleRuleSet}
-                            color={accountData.config.active ? 'yellow' : 'green'}>
-                            {accountData.config.active ? 'Deactivate' : 'Activate'}
+                            color={this.props.configActive ? 'yellow' : 'green'}>
+                            {this.props.configActive ? 'Deactivate' : 'Activate'}
                         </Button>
                     </Form.Field>
                     <Form.Field inline>
@@ -64,6 +56,16 @@ class TwitterConfigSettings extends Component{
                 </Form>
             </div>
         )
+        //}else{
+        //    return <div>Loading</div>
+        //}
     }
 }
-export default withRouter(TwitterConfigSettings)
+const mapStateToProps = state => ({
+    accountData: state.twitterReducer.data,
+    configActive: state.configReducer.isActive
+})
+
+export default connect(
+    mapStateToProps
+)(TwitterConfigSettings);

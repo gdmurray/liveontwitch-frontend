@@ -124,9 +124,32 @@
   .app-sidebar .bottom{
     z-index: 100;
     background: var(--theme-primary-color);
-    padding: 0.25rem;
+    padding: 0.5rem;
   }
 
+  .app-sidebar .live-info{
+    display: flex;
+    justify-content: space-between;
+    width: 114%;
+  }
+
+  .app-sidebar .live-info span{
+    text-overflow: ellipsis;
+  }
+
+  .app-sidebar .live-info > div{
+    display: flex;
+    justify-content: space-between;
+  }
+  .app-sidebar .live-info .live-icon{
+    background: #e21212;
+    border-radius: 50%!important;
+    height: .7rem;
+    width: .7rem;
+    position: relative;
+    top: 2px;
+    right: 5px;
+  }
   .app-sidebar .bottom .header{
     color: white !important;
     font-family: var(--theme-font) !important;

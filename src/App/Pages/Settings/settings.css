@@ -1,0 +1,61 @@
+.settings-wrapper{
+    padding: 1rem;
+    margin-top: 4.3rem;
+}
+.settings-header{
+    margin-left: 3rem !important;
+    color: var(--theme-primary-dark-color) !important;
+}
+.settings-sidebar{
+    width: 25%;
+    max-width: 300px;
+    min-width: 200px;
+    border-right: var(--theme-secondary-color) 1px solid;
+}
+
+.settings-sidebar ul {
+    list-style: none;
+    padding-left: 1.5rem;
+}
+
+.settings-sidebar ul li{
+    padding: 0.5rem 0.5rem 0.5rem 0rem;
+    font-weight: 600;
+    color: var(--theme-body-color) !important; 
+}
+
+.settings-sidebar ul li:hover{
+    cursor: pointer
+}
+
+.settings-sidebar ul li.active{
+    color: var(--theme-primary-color) !important;
+}
+
+.settings-sidebar ul li.active span{
+    border-left: 3px solid var(--theme-primary-color);
+    padding-left: 1.5rem;
+}
+
+.settings-sidebar ul li:not(.active) span{
+    padding-left: 1.6rem;
+}
+
+.settings-content{
+    width: 100%;
+    padding: 1rem;
+}
+
+.settings-content-wrapper{
+    display: flex
+}
+
+.settings-content .segment.top.mini {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.settings-content .segment.attached{
+    max-width: 450px;
+}

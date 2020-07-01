@@ -2,8 +2,15 @@ import React, {Component} from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faGithub} from '@fortawesome/free-brands-svg-icons';
 import {faFileAlt} from '@fortawesome/free-regular-svg-icons';
-import {faUserShield, faPlus} from '@fortawesome/free-solid-svg-icons';
-import {Link,withRouter} from 'react-router-dom';
+import {faUserShield, faPlus, faCog, faSignOutAlt} from '@fortawesome/free-solid-svg-icons';
+import {Link} from 'react-router-dom';
+import {TWITCH_ACCOUNT_SIDEBAR_INFO} from "../../constants";
+import {authenticationService} from "../../_services/authentication.service";
+import { push } from 'connected-react-router'
+import { bindActionCreators } from 'redux'
+import {withRouter} from 'react-router-dom';
+import { connect } from 'react-redux'
+
 import './sidebar.css';
 
 import {
@@ -20,7 +27,35 @@ import {
 } from 'semantic-ui-react';
 import { connectTwitter } from '../../functions';
 
+var SETTINGS_SIDEBAR = [
+    {
+      "title": "Account Settings",
+      "url": "/settings/profile",
+      "icon": faCog
+    },
+    {
+      "title": "Terms of Service",
+      "url": "/terms",
+      "icon": faFileAlt
+    },
+    {
+      "title": "Privacy Policy",
+      "url": "/privacy",
+      "icon": faUserShield,
+    },
+    {
+      "title": "Source Code",
+      "url": "/src",
+      "icon": faGithub
+    },
+    {
+    "title":  "Sign Out",
+    "url": "/logout",
+    "icon": faSignOutAlt
+    },
+  ]
 
+const axios = require('axios');
 
 class AppSidebar extends Component{
     constructor(props){
@@ -30,26 +65,44 @@ class AppSidebar extends Component{
                 0: false,
                 1: false
             },
-            accounts: []
+            accounts: [],
+            liveInfo: {
+                is_live: false,
+                viewers: 0,
+                game: null,
+            }
         }
+        
     }
-
+    componentWillMount(){
+        authenticationService.prepareAuth(this.state);
+    }
     componentWillReceiveProps(newProps){
         if(newProps.accounts !== undefined){
             this.setState({accounts: newProps.accounts});
         }
     }
 
+
     componentDidMount(){
         if(this.props.accounts === undefined){
             this.setState({
                 accounts: JSON.parse(localStorage.getItem('accounts'))
             })
+            axios.get(TWITCH_ACCOUNT_SIDEBAR_INFO)
+                .then(response => {
+                    this.setState({
+                        liveInfo: response.data
+                    })
+                })
         }
     }
     
     handleItemClick = (e, index) => {
-        if(e.target.href === undefined){
+        var url = e.target.getAttribute('data-url');
+        if(url != undefined){
+            this.props.goTo(url);
+        } else if(e.target.href === undefined && e.target.type === undefined){
             var {activeTabs} = this.state;
             activeTabs[index] = !activeTabs[index]
             this.setState({
@@ -57,6 +110,7 @@ class AppSidebar extends Component{
             });
         }
     }
+
     getAccountsDropdown = () => {
         const {accounts} = this.state;
         if(accounts.length === 0){
@@ -77,23 +131,43 @@ class AppSidebar extends Component{
             )
         }
     }
-    goToHome = ( ) => {
-        this.props.history.push('/');
-    }
 
+    getLiveInfo(liveInfo){
+        
+        if(liveInfo.is_live){
+            return (<div className="live-info">
+                <span>{liveInfo.game}</span>
+                <div><div className="live-icon"></div>{liveInfo.viewers}</div>
+            </div>)
+        }else{
+            return 'Offline'
+        }
+    }
     getTwitchInfo = () => {
         var content = localStorage.getItem("userInfo");
         if(content){
             var data = JSON.parse(content);
+            const {liveInfo} = this.state;
             return (
                 <Header as='h5'>
                     <Image circular src={data.logo} /> 
-                        {data.username}
+                    <Header.Content>
+                    {data.display_name}
+                    <Header.Subheader>{this.getLiveInfo(liveInfo)}</Header.Subheader>
+                    </Header.Content>
                 </Header>
             )
         }else{
             return '';
         }
+    }
+    getSettingSidebarItems(){
+        var elems = [];
+        for(var item of SETTINGS_SIDEBAR){
+            elems.push(<li key={item.title.replace(' ', '-')} data-url={item.url}><FontAwesomeIcon icon={item.icon}/>&nbsp;&nbsp;{item.title}</li>)
+        }
+        return elems;
+
     }
     //this.setState({ activeItem: name })
     render(){
@@ -105,7 +179,7 @@ class AppSidebar extends Component{
                             <Header as='h1' className='app-header'>liveontwitch</Header>
                         </Menu.Item>
 
-                        <Menu.Item className="side-element" onClick={() => this.goToHome()}>
+                        <Menu.Item className="side-element" onClick={() => this.props.goToHome()}>
                             <span>HOME</span>
                         </Menu.Item>
                         <Accordion as={Menu} vertical secondary className="sidebar-accordion">
@@ -134,18 +208,7 @@ class AppSidebar extends Component{
                                 </Accordion.Title>
                                 <Accordion.Content active={activeTabs[1]}>
                                     <ul className="sidebar-accounts-list">
-                                        <li>
-                                            Account Settings  
-                                        </li>
-                                        <li>
-                                            <FontAwesomeIcon icon={faFileAlt}/>&nbsp;Terms of Service
-                                        </li>
-                                        <li>
-                                            <FontAwesomeIcon icon={faUserShield} />&nbsp;Privacy Policy
-                                        </li>
-                                        <li>
-                                            <FontAwesomeIcon icon={faGithub} />&nbsp;Source Code
-                                        </li>
+                                        {this.getSettingSidebarItems()}
                                     </ul>
                                 </Accordion.Content>
                             </Menu.Item>
@@ -159,22 +222,16 @@ class AppSidebar extends Component{
     }
 }
 
-export default withRouter(AppSidebar);
-/*
-<Menu.Menu className="bottom">
-    <Header as='h4'>
-        <Icon size="mini" name='cog' />
-        <Header.Content>Settings</Header.Content>
-    </Header>
-    <Menu.Item className="fine-print">
-    <FontAwesomeIcon icon={faFileAlt}/> Terms of Service
-    </Menu.Item>
-    <Menu.Item className="fine-print">
-    <FontAwesomeIcon icon={faUserShield} /> Privacy Policy
-    </Menu.Item>
-    <Menu.Item className="fine-print">
-    <FontAwesomeIcon icon={faGithub} /> Source Code
-    </Menu.Item>
+const mapDispatchToProps = dispatch => bindActionCreators({
+    goToHome: () => push('/'),
+    goTo: (url) => push(url)
+}, dispatch);
 
-</Menu.Menu>
-*/
+const mapStateToProps = state => ({
+    location: state.router.location
+});
+
+export default withRouter(connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AppSidebar));

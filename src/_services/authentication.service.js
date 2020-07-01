@@ -11,10 +11,10 @@ function setToken(token){
     sessionStorage.setItem('access_token', token);
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 }
-
+console.log("ENVIRONMENT: " + process.env.REACT_APP_ENVIRONMENT);
 function prepareAuth(props){
     //console.log(props.location.state);
-    if(props.location.state !== null && props.location.state !== undefined){
+    if(props.location !== undefined && props.location.state !== null && props.location.state !== undefined){
         //console.log("Sent With State");
         if(props.location.state.token !== undefined){
             //console.log("just authed...");
@@ -74,7 +74,7 @@ function generateIdentifier(){
     localStorage.setItem('identifier', JSON.stringify(data));
     return data;
 }
-function connect(props=undefined){
+function connect(props=undefined, twitchAuth=false  ){
     var exists = localStorage.getItem('identifier');
     if (exists == null){
         data = generateIdentifier();
@@ -92,31 +92,52 @@ function connect(props=undefined){
 
     var identifier = data.identifier;
     console.log('identifier: ' + identifier);
-    axios.get(CONNECT_TWITCH_URL, {
-        params: {
-            'identifier': identifier,
-            'application': process.env.REACT_APP_LIVE_CLIENT_ID
-        }
-    }).then((response) => {
-        if (response.data.auth_url !== undefined){
-            window.location = response.data.auth_url;
-        }
-    }).catch((error) => {
-        if(error.response){
-            if(error.response.data.message = "identifier has been used"){
-                localStorage.removeItem("identifier");
-                connect();
+    if(!twitchAuth){
+        props.history.push("/login")
+    }else{
+        axios.get(CONNECT_TWITCH_URL, {
+            params: {
+                'identifier': identifier,
+                'application': process.env.REACT_APP_LIVE_CLIENT_ID
             }
-        }else{
-            // TODO: Have an appropriate Error page
-            if(props){
-                console.log("Go to error page");
-                props.history.push("/error", {"message": "Backend Server is not Responding"})
+        }).then((response) => {
+            if (response.data.auth_url !== undefined){
+                window.location = response.data.auth_url;
+            }
+        }).catch((error) => {
+            if(error.response){
+                if(error.response.data.message == "identifier has been used"){
+                    localStorage.removeItem("identifier");
+                    connect();
+                }else if(error.response.data.message == "client with that ID does not exist"){
+                    alert("🅱️ackend Machine 🅱️roke");
+                }
             }else{
-                alert("Backend Server is Not Responding");
+                // TODO: Have an appropriate Error page
+                if(props){
+                    console.log("Go to error page");
+                    props.history.push("/error", {"message": "Backend Server is not Responding"})
+                }else{
+                    alert("Backend Server is Not Responding");
+                }
+                
             }
-            
+        })
+    }   
+}
+
+export function preSignOut(){
+    var keys = ['userInfo', 'accounts'];
+    for(var key of keys){
+        try{
+            localStorage.removeItem(key)
+        }catch (err){
+            console.log("couldnt remove key: ", key);
         }
-    })
-    
+    }
+    try{
+        sessionStorage.removeItem('access_token')
+    }catch (err){
+        console.log('couldnt remove access_token');
+    }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, withRouter} from 'react-router-dom';
+import { Route, Switch, Router} from 'react-router-dom';
 import './App.css';
 import Dashboard from './Pages/Dashboard';
 import Splash from './Pages/Splash';
@@ -8,64 +8,34 @@ import Authenticating from './Pages/Authenticating';
 import TwitterConfiguration from './Pages/TwitterConfiguration';
 import TwitterConfig from './Pages/TwitterConfig/TwitterConfig';
 import Error from './Pages/Error';
-import Login from './Pages/Login';
+import Login from './Pages/Login/Login';
+import SettingsPage from './Pages/Settings/settings';
+import Home from "./components/Home";
+import history from "../history";
+import Register from './Pages/Register/register';
+import SignOut from './Pages/SignOut';
 const axios = require('axios');
 
-class App extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      showModal: false,
-      searchQuery: null,
-    }
-  }
-  
-  goHome = () => {
-    this.props.history.push('/');
-  }
-
-  openModalCallback = () => {
-    console.log("modal opened??");
-    this.setState({
-      showModal: true
-    })
-  }
-
-  refresh = () => {
-    this.forceUpdate();
-  }
-  closeModalCallback = () => {
-    console.log("closing modal from app");
-    this.setState({
-      showModal: false
-    })
-  }
-
-  routeCallback = (route) => {
-    this.props.history.push(route);
-  }
-  render() {
-    const App = () => (
-      <div>
-        <div className="App-content">
-          <Switch>
-            <Route exact path='/' component={Dashboard}/>
-            <Route exact path='/splash' component={Splash}/>
-            <Route exact path='/connect' component={Connect}/>
-            <Route exact path="/callback" component={Authenticating}/>
-            <Route exact path="/error" component={Error}/>
-            <Route exact path="/login" component={Login}/>
-            <Route path="/twitter/:account" component={TwitterConfig}/>
-          </Switch>
-        </div>
-      </div>
-    )
+export class App extends Component{
+  render(){
     return (
-      <Switch>
-        <App />
-      </Switch>
-    );
+      <div>
+    <div className="App-content">
+    <Router history={history}>
+        <Route exact path='/' component={Dashboard}/>
+        <Route exact path='/splash' component={Splash}/>
+        <Route exact path='/connect' component={Connect}/>
+        <Route exact path="/register" component={Register}/>
+        <Route exact path="/callback" component={Authenticating}/>
+        <Route exact path="/error" component={Error}/>
+        <Route exact path="/login" component={Login}/>
+        <Route exact path="/settings" component={SettingsPage}/>
+        <Route path="/settings/:cmp" component={SettingsPage}/>
+        <Route exact path="/logout" component={SignOut}/>
+        <Route path="/twitter/:account" component={TwitterConfig}/>
+      </Router>
+    </div>
+  </div>
+    )
   }
 }
-
-export default withRouter(App);

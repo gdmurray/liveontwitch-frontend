@@ -6,7 +6,10 @@ import {formatSince} from "../../../functions";
 import {authenticationService} from "../../../_services/authentication.service";
 import TwitterConfigControl from "./TwitterConfigControl";
 import TwitterConfigSettings from "./TwitterConfigSettings";
-
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+import {connect} from "react-redux";
+import store from "../../../store";
 import {
     Button,
     Header,
@@ -15,7 +18,9 @@ import {
     Label,
     Tab,
     Icon,
+    Sidebar,
 } from 'semantic-ui-react';
+import { fetchTwitter, refreshTwitter } from '../../../actions/twitterActions';
 
 const axios = require('axios');
 
@@ -23,13 +28,14 @@ class TwitterConfig extends Component{
     constructor(props){
         super(props);
         this.state = {
-            loadingUser: true,
             account: null,
-            accountData: null,
-            last_refreshed: null,
         }
+        this.addNotification = this.addNotification.bind(this);
+        this.notificationDOMRef = React.createRef();
+        
     }
 
+    
     componentWillMount(){
         authenticationService.prepareAuth(this.props);
         var {account} = this.props.match.params;
@@ -42,62 +48,76 @@ class TwitterConfig extends Component{
         }
     }
 
+    componentCleanup() { // this will hold the cleanup code
+        try{
+            localStorage.removeItem("originalConfig");
+        }catch(err){
+            console.log("big error boi");
+        }
+    }
+
+    componentWillUnmount(){
+        this.componentCleanup();
+        window.removeEventListener('beforeunload', this.componentCleanup);
+    }
+
     componentDidMount(){
         const {account} = this.state;
-        axios.get(`${TWITTER_CONFIG_DETAIL}${account.uid}/`).then(
-            (response) => {
-                this.setState({
-                    accountData: response.data,
-                    last_refreshed: formatSince(response.data.updated),
-                    loadingUser: false
-                });
-            }).catch((error) => {
-                if(error.response.status == 401){
-                    authenticationService.connect();
-                }else if(error.response.status == 404){
-                    console.log("Account Doesnt Exist, Push Update to frontend");
-                    this.props.history.push("/");
-                }
-            });
+        this.props.dispatch(fetchTwitter(account.uid));
+        window.addEventListener('beforeunload', this.componentCleanup);
+    }
+
+    addNotification(data){
+        this.notificationDOMRef.current.addNotification({
+            message: data.message,
+            type: data.type,
+            insert: "top",
+            container: "top-right",
+            animationIn: ["animated", "fadeIn"],
+            animationOut: ["animated", "fadeOut"],
+            dismiss: { duration: 2000 },
+            dismissable: { click: true }
+        })
     }
 
     handleAccountDataRefresh = () => {
         const {account} = this.state;
-        this.setState({
-            loadingUser: true
-        })
-        axios.get(`${TWITTER_REFRESH_DATA}${account.uid}/`).then(
-            (response) => {
-                this.setState({
-                    accountData: response.data,
-                    last_refreshed: formatSince(response.data.updated),
-                    loadingUser: false
-                })
-            }
-        )
+        if(this.props.data.modified_hold){
+            this.addNotification({
+                message: "Error: You cannot refresh your Twitter Info while you are Live",
+                type: "danger"
+            })
+        }else{
+            this.props.dispatch(refreshTwitter(account.uid));
+            //console.log(store.getState());
+        }
     }
+    
     getHeader = (panes) => {
-        const {loadingUser, accountData} = this.state;
-        if(loadingUser){
+        if(this.props.loading){
             return (
                 <div className="twitter-navbar loading">
                     <Header as='h4'><Loader active={true} inline size="small"></Loader>       Loading User...</Header>
                 </div>
             )
-        }else{
+        }
+        else{
+            if(Object.keys(this.props.data).length !== 0){
+                //console.log(this.props.data.updated);
+                //console.log(this.props.data.modified_hold);
             return(
                 <div className={"twitter-navbar"}>
                     <div className="navbar-content">
                         <Header as='h3'>
-                            <Image src={accountData.profile_image_url_https} avatar />
+                            <Image className={this.props.data.modified_hold ? 'live-avatar': ''} src={this.props.data.profile_image_url_https} avatar />
                             <Header.Content>
-                                {accountData.name}
-                                <Header.Subheader>@{accountData.username} <span className="refreshed">Last Refreshed&nbsp;{this.state.last_refreshed}</span></Header.Subheader>
+                                {this.props.data.modified_hold ?this.props.data.modified_name :this.props.data.name}
+                                <Header.Subheader>@{this.props.data.username} <span className="refreshed">Last Refreshed&nbsp;{formatSince(this.props.data.updated)}</span></Header.Subheader>
                             </Header.Content>
                         </Header>
                         <div className="navbar-controls">
-                            <Label color={accountData.config.active ? 'green': 'yellow'}>
-                                Config Status: {accountData.config.active ? 'Active': 'Not Active'}
+                            <Label color={this.props.configActive ? 'green': 'yellow'}>
+                                Config Status: {this.props.configActive ? 'Active': 'Not Active'}
                             </Label>
                             <Button color="blue" size="mini" onClick={this.handleAccountDataRefresh}>
                                 Refresh Twitter Info&nbsp;&nbsp;<Icon name="refresh"/>
@@ -107,6 +127,7 @@ class TwitterConfig extends Component{
                     <Tab className="twitter-tabs" menu={{ secondary: true, pointing: true }} panes={panes} />
                 </div>
             )
+            }
         }
     }
 
@@ -115,25 +136,31 @@ class TwitterConfig extends Component{
             accountData: data
         });
     }
+
     render(){
-        const{loadingUser, accountData} = this.state;
         var panes = [
             //{menuItem: 'Setup', render: () => <Tab.Pane attached={false}>How to Do this</Tab.Pane>},
             {menuItem: 'Configuraton', render: () => <Tab.Pane>
-                <TwitterConfigControl accountData={this.state.accountData} account={this.state.account}
-                    accountDataCallback={this.accountDataCallback}/>
+                <TwitterConfigControl account={this.state.account}/>
             </Tab.Pane>},
             {menuItem: 'Settings', render: () => <Tab.Pane>
-                <TwitterConfigSettings accountData={this.state.accountData} account={this.state.account}
-                    accountDataCallback={this.accountDataCallback}/>
+                <TwitterConfigSettings account={this.state.account}/>
                 </Tab.Pane>}
         ]
         return(
             <div className="core-content">
-                <AppSidebar/>
+                <ReactNotification ref={this.notificationDOMRef} />
+                <AppSidebar />
                 {this.getHeader(panes)}
+                
             </div>
         )
     }
 }
-export default withRouter(TwitterConfig);
+const mapStateToProps = state => ({
+    data: state.twitterReducer.data,
+    loading: state.twitterReducer.loading,
+    error: state.twitterReducer.error,
+    configActive: state.configReducer.isActive
+})
+export default connect(mapStateToProps)(TwitterConfig);
